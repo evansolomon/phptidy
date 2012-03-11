@@ -40,9 +40,13 @@
 $project_files = array();
 
 // List of files you want to exclude from the project files
-// Wildcards are not allowed here.
+// Wildcards are not allowed here, see $project_files_exclude_regexes below
 // Example: array("inc/external_lib.php");
 $project_files_excludes = array();
+
+// List of regexes to use for file exclusion from the project files
+// Example: array("|^inc/|"); - will exclude all files in inc folder
+$project_files_exclude_regexes = array();
 
 // The automatically added author in the phpdoc file docblocks
 // If left empty no new @author doctags will be added.
@@ -197,6 +201,11 @@ foreach ( $project_files_excludes as $file_exclude ) {
 	if (
 		($key = array_search($file_exclude, $files)) !== false
 	) unset($files[$key]);
+}
+
+// Exclude files based on a regexes
+foreach ( $project_files_exclude_regexes as $regex ) {
+	$files = preg_grep($regex, $files, PREG_GREP_INVERT);
 }
 
 // Check files
